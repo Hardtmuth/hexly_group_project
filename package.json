@@ -1,0 +1,28 @@
+{
+  "name": "hexly_group_project",
+  "version": "0.0.1",
+  "description": "Hexlet Group Project 1 Course Backend",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hardtmuth/hexly_group_project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hardtmuth/hexly_group_project/issues"
+  },
+  "homepage": "https://github.com/Hardtmuth/hexly_group_project#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.1"
+  }
+}
