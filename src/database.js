@@ -16,17 +16,24 @@ const closeDb = (db) => {
   });
 };
 
-const getAllTasks = () => {
+const getAllTasks = async () => {
   const db = openDb();
-  const response = [];
-  const sql = 
-  `select t.id, t.name, s.name status 
-    from task t
-    join status s on t.status_id = s.id`;
+  const response = {tasks: []};
+  const sql = `
+    select id, text, status, priority
+    from tasks
+  `;  
+  
 
-  db.all(sql, (err, rows) =>  rows);
+  await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+    }).then((rows) => {
+    rows.forEach(row => {
+      response.tasks.push(row);
+    });
+  });
   closeDb(db);
-  console.log('zxc:' + JSON.stringify());
+  console.log('task:' + JSON.stringify(response));
   return response;
 };
 

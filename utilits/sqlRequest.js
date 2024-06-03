@@ -5,11 +5,11 @@ export default (request) => {
     if (err) {
       return console.error(err.message);
     }
-    console.log('Connected to the in-memory SQlite database.');
+    console.log('Connected to the task.db.');
   });
 
   db.serialize(() => {
-  db.each(request, (err, row) => {
+    db.each(request, (err, row) => {
       if (err) {
         console.error(err.message);
       }

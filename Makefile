@@ -3,7 +3,7 @@ install:
 
 db-setup:
 	touch db/tasks.db
-	/opt/sqlite/sqlite3 db/tasks.db < db/setup.sql
+	node utilits/createTable.js
 
 db-clear:
 	rm db/tasks.db

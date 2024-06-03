@@ -1,19 +1,17 @@
 import request from './sqlRequest.js';
 
 
-const request = `
-  INSERT INTO temp (
-    id,
+const createTask = `
+  INSERT INTO tasks (
     text,
     status,
     priority
   )
   VALUES (
-    1231231223,
-    'regbnm vjkjr',
+    'GO to space',
     'open',
-    'hight'
+    1
   );
 `;
 
-request(request);
+request(createTask);
