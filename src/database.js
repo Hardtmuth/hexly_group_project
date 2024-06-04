@@ -22,8 +22,7 @@ const getAllTasks = async () => {
   const sql = `
     select id, text, status, priority
     from tasks
-  `;  
-  
+  `;
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
@@ -37,4 +36,97 @@ const getAllTasks = async () => {
   return response;
 };
 
-export { getAllTasks };
+const getTaskId = async (id) => {
+  const db = openDb();
+  const response = {task: []};
+  const sql = `
+    select id, text, status, priority
+    from tasks
+    where id = ${id}
+  `;
+
+  await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+    }).then((rows) => {
+    rows.forEach(row => {
+      response.task.push(row);
+    });
+  });
+  closeDb(db);
+  console.log('task:' + JSON.stringify(response));
+  return response;
+};
+
+const createTask = async (text, status, priority) => {
+  const db = openDb();
+  const response = {task: []};
+  const sql = `
+  INSERT INTO tasks (
+    text,
+    status,
+    priority
+  )
+  VALUES (
+    ${text},
+    ${status},
+    ${priority}
+  );
+`;
+
+  await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+    }).then((rows) => {
+    rows.forEach(row => {
+      response.task.push(row);
+    });
+  });
+  closeDb(db);
+  console.log('task:' + JSON.stringify(response));
+  return response;
+};
+
+
+const removeTask = async (id) => {
+  const db = openDb();
+  const response = {task: []};
+  const sql = `
+    DELETE FROM tasks
+    WHERE id = ${id};
+  `;
+
+  await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+    }).then((rows) => {
+    rows.forEach(row => {
+      response.task.push(row);
+    });
+  });
+  closeDb(db);
+  console.log('task:' + JSON.stringify(response));
+  return response;
+};
+
+const changeStatus = async (id, status) => {
+  const db = openDb();
+  const response = {task: []};
+  const sql = `
+    UPDATE tasks SET status = ${status} WHERE id = ${id}
+  `;
+
+  await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+    }).then((rows) => {
+    rows.forEach(row => {
+      response.task.push(row);
+    });
+  });
+  closeDb(db);
+  console.log('task:' + JSON.stringify(response));
+  return response;
+};
+
+
+
+
+export { getAllTasks, getTaskId, createTask, removeTask, changeStatus };
+
