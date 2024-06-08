@@ -57,41 +57,26 @@ const getTaskId = async (id) => {
   return response;
 };
 
+
 const createTask = async (text, status, priority) => {
   const db = openDb();
-  const response = {task: []};
   const sql = `
-  INSERT INTO tasks (
-    text,
-    status,
-    priority
-  )
-  VALUES (
-    ${text},
-    ${status},
-    ${priority}
-  );
-`;
+    INSERT INTO tasks (text, status, priority)
+    VALUES (?, ?, ?);
+  `;
 
-  // await new Promise((resolve, reject) => {
-  //   db.all(sql, (err, rows) => resolve(rows));
-  //   }).then((rows) => {
-  //     console.log(rows);
-  //   rows.forEach(row => {
-  //     response.task.push(row);
-  //   });
-  // });
-  // closeDb(db);
-  // console.log('task:' + JSON.stringify(response));
-  // return response;
+  await new Promise((resolve, reject) => {
+    db.run(sql, [text, status, priority], function(err) {
+      if (err) {
+        console.error(err.message);
+        reject(err);
+      }
+      //resolve({ id: this.lastID });
+    });
+  });
 
-  await db.run(sql);
-  
-  db.close();
-
-
+  closeDb(db);
 };
-
 
 
 const removeTask = async (id) => {

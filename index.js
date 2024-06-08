@@ -21,10 +21,14 @@ app.get('/task', (req, res) => {  // localhost:8080/task?id=2342
   console.log('taskId: ' + taskId.then(rows => res.status(200).json(rows)));
 });
 
-app.post('/task/create', (req, res) => {  // localhost:8080/task/create?text='Learn Code'&status='open'&priority=2
-  console.log('we want to create task: ', req.query.text, req.query.status, req.query.priority);
-  const taskCreate = createTask(req.query.text, req.query.status, req.query.priority);
-  console.log('taskCreate: ' + taskCreate.then(rows => res.status(200).json(rows)));
+app.post('/task/create', (req, res) => {
+  const {text, status, priority } = req.body;
+  if (!text || !status || typeof priority !== 'number') {
+    return res.status(400).json({error: 'Invalid task data' });
+  }
+  const newTask = { text, status, priority };
+  createTask(text, status, priority);
+  res.status(201).json(newTask);
 });
 
 app.post('/task/remove', (req, res) => {  // localhost:8080/task/remove?id=2
