@@ -20,7 +20,7 @@ const getAllTasks = async () => {
   const db = openDb();
   const response = {tasks: []};
   const sql = `
-    select id, name, status_id from task
+    select id, text, status, priority from tasks
   `;
 
   await new Promise((resolve, reject) => {
