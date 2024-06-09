@@ -1,6 +1,5 @@
 import request from './sqlRequest.js';
 
-
 const requestTable = `
   CREATE TABLE tasks (
     id            INTEGER PRIMARY KEY UNIQUE,

@@ -1,6 +1,5 @@
 import request from './sqlRequest.js';
 
-
 const createTask = `
   INSERT INTO tasks (
     text,

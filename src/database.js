@@ -18,27 +18,26 @@ const closeDb = (db) => {
 
 const getAllTasks = async () => {
   const db = openDb();
-  const response = {tasks: []};
+  const response = { tasks: [] };
   const sql = `
     select id, text, status, priority from tasks
   `;
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }
-  ).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.tasks.push(row);
     });
   });
   closeDb(db);
-  console.log('tasks:' + JSON.stringify(response));
+  console.log(`tasks:${JSON.stringify(response)}`);
   return response;
 };
 
 const getTaskId = async (id) => {
   const db = openDb();
-  const response = {task: []};
+  const response = { task: [] };
   const sql = `
     select id, text, status, priority
     from tasks
@@ -47,16 +46,15 @@ const getTaskId = async (id) => {
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.task.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
-
 
 const createTask = async (text, status, priority) => {
   const db = openDb();
@@ -66,22 +64,21 @@ const createTask = async (text, status, priority) => {
   `;
 
   await new Promise((resolve, reject) => {
-    db.run(sql, [text, status, priority], function(err) {
+    db.run(sql, [text, status, priority], (err) => {
       if (err) {
         console.error(err.message);
         reject(err);
       }
-      //resolve({ id: this.lastID });
+      // resolve({ id: this.lastID });
     });
   });
 
   closeDb(db);
 };
 
-
 const removeTask = async (id) => {
   const db = openDb();
-  const response = {task: []};
+  const response = { task: [] };
   const sql = `
     DELETE FROM tasks
     WHERE id = ${id};
@@ -89,38 +86,38 @@ const removeTask = async (id) => {
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.task.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
 
 const changeStatus = async (id, status) => {
   const db = openDb();
-  const response = {task: []};
+  const response = { task: [] };
   const sql = `
     UPDATE tasks SET status = ${status} WHERE id = ${id}
   `;
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.task.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
 
 const createTable = async (name) => {
   const db = openDb();
-  const response = {task: []};
+  const response = { task: [] };
   const sql = `
     CREATE TABLE ${name} (
       id            INTEGER PRIMARY KEY UNIQUE,
@@ -132,52 +129,51 @@ const createTable = async (name) => {
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.task.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
 
-
 const dropTable = async (name) => {
   const db = openDb();
-  const response = {task: []};
+  const response = { task: [] };
   const sql = `
     DROP TABLE ${name}
   `;
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.task.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
 
 const changePriority = async (id, priority) => {
   const db = openDb();
-  const response = {task: []};
+  const response = { task: [] };
   const sql = `
     UPDATE tasks SET priority = ${priority} WHERE id = ${id}
   `;
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.task.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
 
@@ -192,15 +188,17 @@ const getTasksByPriority = async (priority) => {
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
-    rows.forEach(row => {
+  }).then((rows) => {
+    rows.forEach((row) => {
       response.task.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log(`task:${JSON.stringify(response)}`);
   return response;
-}
+};
 
-export { getAllTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable, changePriority, getTasksByPriority };
-
+export {
+  getAllTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable, 
+  changePriority, getTasksByPriority,
+};

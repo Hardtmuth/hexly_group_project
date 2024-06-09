@@ -1,7 +1,7 @@
 import sqlite3 from 'sqlite3';
 
 export default (request) => {
-  let db = new sqlite3.Database('./db/tasks.db', sqlite3.OPEN_READWRITE, (err) => {
+  const db = new sqlite3.Database('./db/tasks.db', sqlite3.OPEN_READWRITE, (err) => {
     if (err) {
       return console.error(err.message);
     }
@@ -22,4 +22,4 @@ export default (request) => {
     }
     console.log('Close the database connection.');
   });
-}
+};
