@@ -20,19 +20,19 @@ const getAllTasks = async () => {
   const db = openDb();
   const response = {tasks: []};
   const sql = `
-    select id, text, status, priority
-    from tasks
+    select id, name, status_id from task
   `;
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
-    }).then((rows) => {
+    }
+  ).then((rows) => {
     rows.forEach(row => {
       response.tasks.push(row);
     });
   });
   closeDb(db);
-  console.log('task:' + JSON.stringify(response));
+  console.log('tasks:' + JSON.stringify(response));
   return response;
 };
 

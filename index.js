@@ -6,12 +6,25 @@ const PORT = 8080;
 const app = express();
 app.use(express.json());
 
-app.get('/tasks', (req, res) => {
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Replace '*' with your specific allowed origin in production
+  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
+app.get('/tasks', async (req, res) => {
   console.log('getting all tasks');
   res.setHeader('Content-Type', 'application/json');
-  const allTasks = getAllTasks();
-  console.log('allTasks: ' + allTasks.then(rows => res.status(200).json(rows)));
-  
+  res.setHeader('Cache-Control', 'no-store');
+  // allTasks.then(rows => res.status(200).json(rows));
+  try {
+    const allTasks = await getAllTasks();
+    console.log('QWE: ' + JSON.stringify(allTasks));
+    res.status(200).json(allTasks);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.get('/task', (req, res) => {  // localhost:8080/task?id=2342
