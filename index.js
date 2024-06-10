@@ -46,9 +46,17 @@ app.post('/task/create', (req, res) => {
 });
 
 app.post('/task/remove', (req, res) => { // localhost:8080/task/remove?id=2
-  console.log(`we want to remove in id =${req.query.id}`);
+  const { id } = req.body;
+  console.log(req.body);
+  if (!id || typeof id !== 'number') {
+    return res.status(400).json({ error: 'Invalid task data' });
+  }
+  const delTask = { id };
+  removeTask(id);
+  res.status(201).json(delTask);
+  /* console.log(`we want to remove in id =${req.query.id}`);
   const taskRemove = removeTask(req.query.id);
-  console.log(`taskRemove: ${taskRemove.then((rows) => res.status(200).json(rows))}`);
+  console.log(`taskRemove: ${taskRemove.then((rows) => res.status(200).json(rows))}`); */
 });
 
 app.post('/task/change-status', (req, res) => { // localhost:8080/task/change-status?id=3&status='closed'

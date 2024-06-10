@@ -78,13 +78,24 @@ const createTask = async (text, status, priority) => {
 
 const removeTask = async (id) => {
   const db = openDb();
-  const response = { task: [] };
+  // const response = { task: [] };
   const sql = `
     DELETE FROM tasks
-    WHERE id = ${id};
+    WHERE id = ?;
   `;
 
   await new Promise((resolve, reject) => {
+    db.run(sql, [id], (err) => {
+      if (err) {
+        console.error(err.message);
+        reject(err);
+      }
+      // resolve({ id: this.lastID });
+    });
+  });
+
+  closeDb(db);
+  /* await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -93,7 +104,7 @@ const removeTask = async (id) => {
   });
   closeDb(db);
   console.log(`task:${JSON.stringify(response)}`);
-  return response;
+  return response; */
 };
 
 const changeStatus = async (id, status) => {
