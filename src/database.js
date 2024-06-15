@@ -109,21 +109,21 @@ const removeTask = async (id) => {
 
 const changeStatus = async (id, status) => {
   const db = openDb();
-  const response = { task: [] };
   const sql = `
-    UPDATE tasks SET status = ${status} WHERE id = ${id}
+    UPDATE tasks SET status = ? WHERE id = ?
   `;
 
   await new Promise((resolve, reject) => {
-    db.all(sql, (err, rows) => resolve(rows));
-  }).then((rows) => {
-    rows.forEach((row) => {
-      response.task.push(row);
+    db.run(sql, [status, id], (err) => {
+      if (err) {
+        console.error(err.message);
+        reject(err);
+      }
+      // resolve({ id: this.lastID });
     });
   });
+
   closeDb(db);
-  console.log(`task:${JSON.stringify(response)}`);
-  return response;
 };
 
 const createTable = async (name) => {

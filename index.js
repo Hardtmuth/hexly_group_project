@@ -60,9 +60,15 @@ app.post('/task/remove', (req, res) => { // localhost:8080/task/remove?id=2
 });
 
 app.post('/task/change-status', (req, res) => { // localhost:8080/task/change-status?id=3&status='closed'
-  console.log(`we want to change status in id = ${req.query.id}`, req.query.status);
-  const statusChange = changeStatus(req.query.id, req.query.status);
-  console.log(`statusChange: ${statusChange.then((rows) => res.status(200).json(rows))}`);
+  const { id, status } = req.body;
+  console.log(id, status);
+  console.log(req.body);
+  if (!id || typeof id !== 'number' || !status) {
+    return res.status(400).json({ error: 'Invalid task data' });
+  };
+  const chStatus = { id, status };
+  changeStatus(id, status);
+  res.status(201).json(chStatus);
 });
 
 app.post('/task/create-table', (req, res) => { // localhost:8080/task/create-table?name=tasks2
