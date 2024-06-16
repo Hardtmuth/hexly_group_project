@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  getAllTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable, changePriority, getTasksByPriority,
+  getAllTasks, getDeletedTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable, changePriority, getTasksByPriority, removeRecycledTask, cartClean
 } from './src/database.js';
 
 const PORT = 8080;
@@ -21,6 +21,20 @@ app.get('/tasks', async (req, res) => {
   // allTasks.then(rows => res.status(200).json(rows));
   try {
     const allTasks = await getAllTasks();
+    console.log(`QWE: ${JSON.stringify(allTasks)}`);
+    res.status(200).json(allTasks);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/deleted-tasks', async (req, res) => {
+  console.log('getting deleted tasks');
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Cache-Control', 'no-store');
+  // allTasks.then(rows => res.status(200).json(rows));
+  try {
+    const allTasks = await getDeletedTasks();
     console.log(`QWE: ${JSON.stringify(allTasks)}`);
     res.status(200).json(allTasks);
   } catch (error) {
@@ -52,7 +66,7 @@ app.post('/task/remove', (req, res) => { // localhost:8080/task/remove?id=2
     return res.status(400).json({ error: 'Invalid task data' });
   }
   const delTask = { id };
-  removeTask(id);
+  removeRecycledTask(id);
   res.status(201).json(delTask);
   /* console.log(`we want to remove in id =${req.query.id}`);
   const taskRemove = removeTask(req.query.id);
@@ -81,6 +95,12 @@ app.post('/task/drop-table', (req, res) => { // localhost:8080/task/drop-table?n
   console.log(`we want drop table wtih name =${req.query.name}`);
   const tableDrop = dropTable(req.query.name);
   console.log(`tableDrop: ${tableDrop.then((rows) => res.status(200).json(rows))}`);
+});
+
+app.post('/clean-cart', (req, res) => {
+  console.log(`we want clean cart`);
+  const cleanCart = cartClean();
+  res.status(201).json(chStatus);
 });
 
 app.post('/task/change-priority', (req, res) => { // localhost:8080/task/change-priority?id=3&priority=2
