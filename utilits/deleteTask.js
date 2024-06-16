@@ -1,8 +1,8 @@
 import request from './sqlRequest.js';
 
-const deletTask = `
+const deleteTask = `
 DELETE FROM temp
 WHERE id = 1231231223;
 `;
 
-request(deletTask);
+request(deleteTask);

@@ -1,7 +1,7 @@
 import request from './sqlRequest.js';
 
-const deletTask = `
+const deleteTask = `
   DELETE FROM tasks
 `;
 
-request(deletTask);
+request(deleteTask);
