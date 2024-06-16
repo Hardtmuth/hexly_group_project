@@ -1,4 +1,4 @@
-name: lint, test and RUN
+name: lint and test
 on: push
 jobs:
   build:
@@ -9,4 +9,3 @@ jobs:
       - run: make db-setup
       - run: make lint
       - run: make test
-      - run: make run
