@@ -4,7 +4,7 @@ const openDb = () => new sqlite3.Database('./db/tasks.db', sqlite3.OPEN_READWRIT
   if (err) {
     return console.error(err.message);
   }
-  console.debug('Connected to the ./db/tasks.db SQlite database.');
+  // console.debug('Connected to the ./db/tasks.db SQlite database.');
 });
 
 const closeDb = (db) => {
@@ -12,7 +12,7 @@ const closeDb = (db) => {
     if (err) {
       return console.error(err.message);
     }
-    console.debug('Close the database connection.');
+    // console.debug('Close the database connection.');
   });
 };
 
@@ -58,24 +58,24 @@ const getDeletedTasks = async () => {
   return response;
 };
 
-const getTaskId = async (id) => {
+const getTaskId = async (text) => {
   const db = openDb();
-  const response = { task: [] };
+  const response = [];
   const sql = `
-    select id, text, status, priority
+    select id
     from tasks
-    where id = ${id}
+    where text = '${text}'
   `;
 
   await new Promise((resolve, reject) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
-      response.task.push(row);
+      response.push(row);
     });
   });
   closeDb(db);
-  console.log(`task:${JSON.stringify(response)}`);
+  //console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
 
@@ -92,9 +92,17 @@ const createTask = async (text, status, priority) => {
         console.error(err.message);
         reject(err);
       }
-      // resolve({ id: this.lastID });
+      resolve({ text: text });
     });
   });
+
+  /* await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+  }).then((rows) => {
+    rows.forEach((row) => {
+      response.task.push(row);
+    });
+  }); */
 
   closeDb(db);
 };
@@ -112,7 +120,7 @@ const removeTask = async (id) => {
         console.error(err.message);
         reject(err);
       }
-      // resolve({ id: this.lastID });
+      resolve({ id: id });
     });
   });
 
@@ -172,7 +180,7 @@ const changeStatus = async (id, status) => {
         console.error(err.message);
         reject(err);
       }
-      // resolve({ id: this.lastID });
+      resolve({ id: id, status: status });
     });
   });
 
@@ -282,7 +290,48 @@ const getTasksByPriority = async (priority) => {
   return response;
 };
 
+const getTasksByText = async (text) => {
+  const db = openDb();
+  const response = { task: [] };
+  const sql = `
+    SELECT text, status, priority
+    FROM tasks
+    WHERE text = '${text}'
+  `;
+
+  await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+  }).then((rows) => {
+    rows.forEach((row) => {
+      response.task.push(row);
+    });
+  });
+  closeDb(db);
+  // console.log(`text task:${JSON.stringify(response)}`);
+  return response;
+};
+
+const removeTasksByText = async (text) => {
+  const db = openDb();
+  const response = { task: [] };
+  const sql = `
+    DELETE FROM tasks
+    WHERE text = '${text}'
+  `;
+
+  await new Promise((resolve, reject) => {
+    db.all(sql, (err, rows) => resolve(rows));
+  }).then((rows) => {
+    rows.forEach((row) => {
+      response.task.push(row);
+    });
+  });
+  closeDb(db);
+  // console.log(`text task:${JSON.stringify(response)}`);
+  return response;
+};
+
 export {
-  getAllTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable, 
-  changePriority, getTasksByPriority, getDeletedTasks, removeRecycledTask, cartClean
+  getAllTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable,
+  changePriority, getTasksByPriority, getDeletedTasks, removeRecycledTask, cartClean, getTasksByText, removeTasksByText
 };

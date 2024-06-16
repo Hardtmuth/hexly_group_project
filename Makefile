@@ -14,5 +14,8 @@ lint:
 lint-fix:
 	npx eslint . --fix
 
+test:
+	npx jest
+
 run:
 	npm run dev
