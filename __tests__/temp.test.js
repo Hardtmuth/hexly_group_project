@@ -1,4 +1,3 @@
-
 import {
   getTaskId,
   createTask,
@@ -7,24 +6,16 @@ import {
   getTasksByText,
   removeTasksByText,
 } from '../src/database.js';
-
-const tempTask = {
-  text: 'temp task',
-  status: 'open',
-  priority: 1
-};
+import tempTask from '../__fixtures__/testTask.js';
+import { result, result1, result2 } from '../__fixtures__/results.js';
 
 const { text, status, priority } = tempTask;
-
-const result = { "task": [{ "text": 'temp task', "status": 'open', "priority": 1 }] };
-const result1 = { "task": [{ "text": 'temp task', "status": 'closed', "priority": 1 }] };
-const result2 = { "task": [{ "text": 'temp task', "status": 'recycled', "priority": 1 }] };
 
 test('create task', async () => {
   await createTask(text, status, priority);
   const response = await getTasksByText(text);
 
-  expect(response).toEqual(result);
+  expect(JSON.stringify(response)).toEqual(JSON.stringify(result));
   removeTasksByText(text);
 });
 
@@ -35,7 +26,7 @@ test('change status task', async () => {
   await changeStatus(id[0].id, 'closed');
   const response = await getTasksByText(text);
 
-  expect(response).toEqual(result1);
+  expect(JSON.stringify(response)).toEqual(JSON.stringify(result1));
   removeTasksByText(text);
 });
 
@@ -46,6 +37,6 @@ test('remove task', async () => {
   await removeTask(id[0].id);
   const response = await getTasksByText(text);
 
-  expect(response).toEqual(result2);
+  expect(JSON.stringify(response)).toEqual(JSON.stringify(result2));
   removeTasksByText(text);
 });

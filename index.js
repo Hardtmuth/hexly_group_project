@@ -1,6 +1,16 @@
 import express from 'express';
 import {
-  getAllTasks, getDeletedTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable, changePriority, getTasksByPriority, removeRecycledTask, cartClean
+  getAllTasks,
+  getDeletedTasks,
+  getTaskId,
+  createTask,
+  changeStatus,
+  createTable,
+  dropTable,
+  changePriority,
+  getTasksByPriority,
+  removeRecycledTask,
+  cartClean,
 } from './src/database.js';
 
 const PORT = 8080;
@@ -18,13 +28,12 @@ app.get('/tasks', async (req, res) => {
   console.log('getting all tasks');
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
-  // allTasks.then(rows => res.status(200).json(rows));
   try {
     const allTasks = await getAllTasks();
-    console.log(`QWE: ${JSON.stringify(allTasks)}`);
-    res.status(200).json(allTasks);
+    console.log(`tasks: ${JSON.stringify(allTasks)}`);
+    return res.status(200).json(allTasks);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -32,21 +41,20 @@ app.get('/deleted-tasks', async (req, res) => {
   console.log('getting deleted tasks');
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store');
-  // allTasks.then(rows => res.status(200).json(rows));
   try {
     const allTasks = await getDeletedTasks();
-    console.log(`QWE: ${JSON.stringify(allTasks)}`);
-    res.status(200).json(allTasks);
+    return res.status(200).json(allTasks);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-app.get('/task', (req, res) => { // localhost:8080/task?id=2342
+app.get('/task', (req, res) => {
   console.log(`getting tasks with id = ${req.query.id}`);
   res.setHeader('Content-Type', 'application/json');
   const taskId = getTaskId(req.query.id);
   console.log(`taskId: ${taskId.then((rows) => res.status(200).json(rows))}`);
+  return taskId;
 });
 
 app.post('/task/create', (req, res) => {
@@ -56,10 +64,10 @@ app.post('/task/create', (req, res) => {
   }
   const newTask = { text, status, priority };
   createTask(text, status, priority);
-  res.status(201).json(newTask);
+  return res.status(201).json(newTask);
 });
 
-app.post('/task/remove', (req, res) => { // localhost:8080/task/remove?id=2
+app.post('/task/remove', (req, res) => {
   const { id } = req.body;
   console.log(req.body);
   if (!id || typeof id !== 'number') {
@@ -67,49 +75,43 @@ app.post('/task/remove', (req, res) => { // localhost:8080/task/remove?id=2
   }
   const delTask = { id };
   removeRecycledTask(id);
-  res.status(201).json(delTask);
-  /* console.log(`we want to remove in id =${req.query.id}`);
-  const taskRemove = removeTask(req.query.id);
-  console.log(`taskRemove: ${taskRemove.then((rows) => res.status(200).json(rows))}`); */
+  return res.status(201).json(delTask);
 });
 
-app.post('/task/change-status', (req, res) => { // localhost:8080/task/change-status?id=3&status='closed'
+app.post('/task/change-status', (req, res) => {
   const { id, status } = req.body;
-  console.log(id, status);
-  console.log(req.body);
   if (!id || typeof id !== 'number' || !status) {
     return res.status(400).json({ error: 'Invalid task data' });
-  };
+  }
   const chStatus = { id, status };
   changeStatus(id, status);
-  res.status(201).json(chStatus);
+  return res.status(201).json(chStatus);
 });
 
-app.post('/task/create-table', (req, res) => { // localhost:8080/task/create-table?name=tasks2
+app.post('/task/create-table', (req, res) => {
   console.log(`we want create new table with name =${req.query.name}`);
   const tableCreate = createTable(req.query.name);
   console.log(`tableCreate: ${tableCreate.then((rows) => res.status(200).json(rows))}`);
 });
 
-app.post('/task/drop-table', (req, res) => { // localhost:8080/task/drop-table?name=tasks2
+app.post('/task/drop-table', (req, res) => {
   console.log(`we want drop table wtih name =${req.query.name}`);
   const tableDrop = dropTable(req.query.name);
   console.log(`tableDrop: ${tableDrop.then((rows) => res.status(200).json(rows))}`);
 });
 
 app.post('/clean-cart', (req, res) => {
-  console.log(`we want clean cart`);
-  const cleanCart = cartClean();
-  res.status(201).json(chStatus);
+  cartClean();
+  res.status(201).json('cart was clear');
 });
 
-app.post('/task/change-priority', (req, res) => { // localhost:8080/task/change-priority?id=3&priority=2
+app.post('/task/change-priority', (req, res) => {
   console.log(`we want to change priority in id = ${req.query.id}`, req.query.priority);
   const priorityChange = changePriority(req.query.id, req.query.priority);
   console.log(`priorityChange: ${priorityChange.then((rows) => res.status(200).json(rows))}`);
 });
 
-app.get('/task/get-priority', (req, res) => { // localhost:8080/task/get-priority?priority=2
+app.get('/task/get-priority', (req, res) => {
   console.log(`getting priority =${req.query.id}`);
   res.setHeader('Content-Type', 'application/json');
   const getPriority = getTasksByPriority(req.query.priority);

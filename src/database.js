@@ -4,7 +4,7 @@ const openDb = () => new sqlite3.Database('./db/tasks.db', sqlite3.OPEN_READWRIT
   if (err) {
     return console.error(err.message);
   }
-  // console.debug('Connected to the ./db/tasks.db SQlite database.');
+  return 1;
 });
 
 const closeDb = (db) => {
@@ -12,7 +12,7 @@ const closeDb = (db) => {
     if (err) {
       return console.error(err.message);
     }
-    // console.debug('Close the database connection.');
+    return 1;
   });
 };
 
@@ -25,7 +25,7 @@ const getAllTasks = async () => {
     where not status = 'recycled'
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -46,7 +46,7 @@ const getDeletedTasks = async () => {
     where status = 'recycled'
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -67,7 +67,7 @@ const getTaskId = async (text) => {
     where text = '${text}'
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -75,7 +75,6 @@ const getTaskId = async (text) => {
     });
   });
   closeDb(db);
-  //console.log(`task:${JSON.stringify(response)}`);
   return response;
 };
 
@@ -92,7 +91,7 @@ const createTask = async (text, status, priority) => {
         console.error(err.message);
         reject(err);
       }
-      resolve({ text: text });
+      resolve({ text });
     });
   });
 
@@ -120,7 +119,7 @@ const removeTask = async (id) => {
         console.error(err.message);
         reject(err);
       }
-      resolve({ id: id });
+      resolve({ id });
     });
   });
 
@@ -180,7 +179,7 @@ const changeStatus = async (id, status) => {
         console.error(err.message);
         reject(err);
       }
-      resolve({ id: id, status: status });
+      resolve({ id, status });
     });
   });
 
@@ -199,7 +198,7 @@ const createTable = async (name) => {
     );
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -218,7 +217,7 @@ const dropTable = async (name) => {
     DROP TABLE ${name}
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -230,7 +229,7 @@ const dropTable = async (name) => {
   return response;
 };
 
-const cartClean = async (name) => {
+const cartClean = async () => {
   const db = openDb();
   const response = { task: [] };
   const sql = `
@@ -238,7 +237,7 @@ const cartClean = async (name) => {
     WHERE status = 'recycled'
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -257,7 +256,7 @@ const changePriority = async (id, priority) => {
     UPDATE tasks SET priority = ${priority} WHERE id = ${id}
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -278,7 +277,7 @@ const getTasksByPriority = async (priority) => {
     WHERE priority = ${priority}
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -299,7 +298,7 @@ const getTasksByText = async (text) => {
     WHERE text = '${text}'
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -319,7 +318,7 @@ const removeTasksByText = async (text) => {
     WHERE text = '${text}'
   `;
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     db.all(sql, (err, rows) => resolve(rows));
   }).then((rows) => {
     rows.forEach((row) => {
@@ -332,6 +331,18 @@ const removeTasksByText = async (text) => {
 };
 
 export {
-  getAllTasks, getTaskId, createTask, removeTask, changeStatus, createTable, dropTable,
-  changePriority, getTasksByPriority, getDeletedTasks, removeRecycledTask, cartClean, getTasksByText, removeTasksByText
+  getAllTasks,
+  getTaskId,
+  createTask,
+  removeTask,
+  changeStatus,
+  createTable,
+  dropTable,
+  changePriority,
+  getTasksByPriority,
+  getDeletedTasks,
+  removeRecycledTask,
+  cartClean,
+  getTasksByText,
+  removeTasksByText,
 };
