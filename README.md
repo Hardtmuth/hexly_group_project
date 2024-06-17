@@ -23,8 +23,6 @@ Our Hexlet To Do project is designed to solve household tasks in everyday life. 
 ```
 Bootstrap: For responsive and visually appealing UI design.
 
-SQL: For structured query language operations and database management.
-
 Axios: For making HTTP requests from the client to the server.
 
 Express: As the backend web framework for building the server-side application.
@@ -33,8 +31,7 @@ SQLite3: For the database, providing lightweight and efficient data storage.
 
 Node.js: As the JavaScript runtime for building the server-side application.
 
-JavaScript: For building the frontend and backend components of the application.PurposeThis project was developed to gain practical experience in:
-Web application developmentCollaborative software developmentTeamwork and project management
+JavaScript: For building the frontend and backend components of the application.
 ```
 
 ## Getting started
